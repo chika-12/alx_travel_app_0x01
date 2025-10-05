@@ -1,0 +1,1 @@
+This project handles property listing and and bookings
