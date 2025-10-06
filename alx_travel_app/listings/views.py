@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
-from .serializers import ListingSerializer, BookingSerializer
+from rest_framework import status, viewsets
+from .serializers import ListingSerializer, BookingSerializer, UserSerializers
 from .models import Listing, User, Booking
 
 @api_view(["GET", "POST"])
@@ -39,3 +39,7 @@ def listing_details(request, pk):
   elif request.method == "DELETE":
     list_prop.delete()
     return Response(status=status.HTTP_204_NO_CONTENT) 
+
+class UserViewSet(viewsets.ModelViewSet):
+  queryset = User.objects.all()
+  serializer_class = UserSerializers
