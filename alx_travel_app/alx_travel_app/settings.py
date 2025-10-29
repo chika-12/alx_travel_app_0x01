@@ -79,7 +79,7 @@ WSGI_APPLICATION = "alx_travel_app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "travel_app",
+        "NAME": "alx-travel",
         "USER": "postgres",
         "PASSWORD": "Chika12mark??",
         "HOST": "localhost",
@@ -143,3 +143,4 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
 }
+AUTH_USER_MODEL = 'listings.User'

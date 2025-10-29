@@ -1,16 +1,18 @@
 from django.db import models
 import uuid
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
-class User(models.Model):
+class User(AbstractUser):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
   full_name = models.CharField(max_length=300)
-  email = models.CharField(unique=True)
+  email = models.EmailField(unique=True)
   phone = models.CharField(blank=True, null=True, max_length=20)
-  password = models.CharField(max_length=600)
-  date_joined = models.DateTimeField(auto_now_add=True)
+  #profile_image = models.ImageField(upload_to="profile_images/", blank=True, null=True)
+  username = models.CharField(max_length=150, unique=True, default="user_default")
+
 
   def __str__(self):
-    return self.full_name
+    return self.username
 
 class Listing(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -52,8 +54,6 @@ class Listing(models.Model):
 
 class Booking(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-  # 🔗 Relationships
   user = models.ForeignKey(User, 
     on_delete=models.CASCADE,
     related_name='bookings'
@@ -97,3 +97,20 @@ class Booking(models.Model):
     return f"Booking by {self.user.username} for {self.listing}"
   class Meta:
     ordering = ['-created_at']
+
+class Payment(models.Model):
+  email = models.EmailField()
+  first_name = models.CharField(max_length=50)
+  last_name = models.CharField(max_length= 50)
+  amount = models.DecimalField(max_digits=10, decimal_places=2)
+  trx_ref = models.CharField(max_length=300, unique=True, editable=False)
+  status = models.CharField(default="pending", max_length=20)
+  created_at = models.DateTimeField(auto_now_add=True)
+  
+  def save(self, *args, **kwargs):
+    if not self.trx_ref:
+      self.trx_ref = str(uuid.uuid4())
+    super().save(*args, **kwargs)
+  
+  def __str__(self):
+    return f"{self.email} {self.trx_ref} {self.status}"
